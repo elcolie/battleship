@@ -6,6 +6,7 @@ djangorestframework
 djangorestframework-jwt
 django-cors-headers
 django-extensions
+django-choices
 docker-compose
 ipython
 ipdb
@@ -14,3 +15,7 @@ psycopg2-binary
 gunicorn
 gevent
 coverage
+model_mommy
+pytest-django
+pytest-xdist
+

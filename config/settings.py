@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'boards',
+    'missiles',
+    'fleets',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +135,9 @@ STATICFILES_FINDERS = (
 # Media files
 MEDIA_ROOT = str(ROOT_DIR('media'))
 MEDIA_URL = '/media/'
+
+OCEAN_SIZE = 10
+BATTLESHIP_SIZE = 4
+CRUISER_SIZE = 3
+DESTROYER_SIZE = 2
+SUBMARINE_SIZE = 1
