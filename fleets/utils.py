@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Q
 
 from fleets.models import Fleet
 
@@ -30,35 +31,14 @@ def add_ship(board, x_axis, y_axis, ship_type, vertical: bool = True):
 def submarine_surrounding(board, x_axis, y_axis, ship_size, vertical: bool = True) -> bool:
     """Very simple one since it has single block"""
     ship_size = settings.SUBMARINE_SIZE
-    # lower
-    qs1 = Fleet.objects.filter(
-        x_axis__in=range(x_axis - 1, x_axis + ship_size),
-        y_axis=y_axis - 1,
+    cross_surronding = Fleet.objects.filter(
+        Q(x_axis__in=range(x_axis - 1, x_axis + ship_size), y_axis=y_axis - 1) |
+        Q(x_axis__in=range(x_axis - 1, x_axis + ship_size), y_axis=y_axis + 1) |
+        Q(x_axis=x_axis - 1, y_axis__in=range(y_axis - 1, y_axis + ship_size)) |
+        Q(x_axis=x_axis + 1, y_axis__in=range(y_axis - 1, y_axis + ship_size)),
         occupied=True,
         board=board
     ).exists()
-    # upper
-    qs2 = Fleet.objects.filter(
-        x_axis__in=range(x_axis - 1, x_axis + ship_size),
-        y_axis=y_axis + 1,
-        occupied=True,
-        board=board
-    ).exists()
-    # left
-    qs3 = Fleet.objects.filter(
-        x_axis=x_axis - 1,
-        y_axis__in=range(y_axis - 1, y_axis + ship_size),
-        occupied=True,
-        board=board
-    ).exists()
-    # right
-    qs4 = Fleet.objects.filter(
-        x_axis=x_axis + 1,
-        y_axis__in=range(y_axis - 1, y_axis + ship_size),
-        occupied=True,
-        board=board
-    ).exists()
-    cross_surronding = qs1 or qs2 or qs3 or qs4
 
     qs_top_left = Fleet.objects.filter(
         x_axis=x_axis - 1,
@@ -84,7 +64,15 @@ def submarine_surrounding(board, x_axis, y_axis, ship_size, vertical: bool = Tru
         occupied=True,
         board=board
     ).exists()
-    diagonal_surrounding = qs_top_left or qs_top_right or qs_bottom_left or qs_bottom_right
+    # diagonal_surrounding = qs_top_left or qs_top_right or qs_bottom_left or qs_bottom_right
+    diagonal_surrounding = Fleet.objects.filter(
+        Q(x_axis=x_axis - 1, y_axis=y_axis - 1) |  # top_left
+        Q(x_axis=x_axis + 1, y_axis=y_axis - 1) |  # top_right
+        Q(x_axis=x_axis - 1, y_axis=y_axis + 1) |  # bottom_left
+        Q(x_axis=x_axis + 1, y_axis=y_axis + 1),  # bottom_right
+        occupied=True,
+        board=board
+    )
     if cross_surronding or diagonal_surrounding:
         raise NearShipException(f"Too near!")
 
