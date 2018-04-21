@@ -130,3 +130,20 @@ def test_submarine_overlap_battle_ship(board):
     add_submarine(board, 5, 5, vertical=False)
     with pytest.raises(NearShipException):
         add_battleship(board, 5, 6, vertical=False)
+
+
+def test_battleship_horizontal_then_submarine_top_left(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 4, 4, vertical=False)
+
+def test_battleship_horizontal_then_submarine_top_mid(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 5, 4, vertical=False)
+
+def test_battleship_horizontal_then_submarine_top_right(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 6, 4, vertical=False)
+

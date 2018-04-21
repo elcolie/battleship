@@ -29,6 +29,7 @@ def add_ship(board, x_axis, y_axis, ship_type, vertical: bool = True):
 
 
 def submarine_surrounding(board, x_axis, y_axis):
+    """This is different from the rest of fleet since it can combine to single one with diagonal"""
     qs = Fleet.objects.filter(
         Q(
             Q(x_axis=x_axis - 1, y_axis__in=range(y_axis - 1, y_axis + 1)) |  # left
