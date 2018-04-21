@@ -19,7 +19,7 @@ class MissileViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
 
         # Game logic start here. Logic will be messed since data is backward when ship is sunk!
-        point = Fleet.objects.get(**request.data)  # prepare for ship sinks
+        point = Fleet.objects.filter(**request.data).first()  # prepare for ship sinks
         if point is None:
             return Response(data={'message': f"Miss"}, status=status.HTTP_201_CREATED, headers=headers)
         else:

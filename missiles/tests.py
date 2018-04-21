@@ -40,6 +40,21 @@ def test_hit_battleship(board):
     assert msg == res.data
 
 
+def test_miss_battleship(board):
+    add_battleship(board, 1, 1, vertical=False)
+    url = reverse('api:missile-list')
+    data = {
+        'board': board.id,
+        'x_axis': 2,
+        'y_axis': 2,
+    }
+    client = APIClient()
+    res = client.post(url, data=data, format='json')
+    msg = {'message': 'Miss'}
+    assert status.HTTP_201_CREATED == res.status_code
+    assert msg == res.data
+
+
 def test_shoot_same_position(board):
     Missile.objects.create(board=board, x_axis=1, y_axis=1)
     url = reverse('api:missile-list')
