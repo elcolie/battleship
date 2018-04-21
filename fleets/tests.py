@@ -27,3 +27,26 @@ def test_place_battle_at_left_bottom(board):
 def test_place_battleship_at_left_top_corner_horizontal(board):
     Fleet.objects.add_battleship(board, 1, 1, vertical=False)
     assert 4 == Fleet.objects.filter(fleet_type=Fleet.FleetType.battleship, y_axis=1).count()
+
+
+def test_place_battleship_at_right_top_vertical(board):
+    Fleet.objects.add_battleship(board, 10, 1, vertical=True)
+    assert 4 == Fleet.objects.filter(fleet_type=Fleet.FleetType.battleship, x_axis=10).count()
+
+
+def test_place_battleship_at_right_top_horizontal(board):
+    with pytest.raises(OutOceanException):
+        Fleet.objects.add_battleship(board, 10, 1, vertical=False)
+    assert 0 == Fleet.objects.count()
+
+
+def test_place_battleship_at_right_bottom_vertical(board):
+    with pytest.raises(OutOceanException):
+        Fleet.objects.add_battleship(board, 10, 10, vertical=True)
+    assert 0 == Fleet.objects.count()
+
+
+def test_place_battleship_at_right_bottom_horizontal(board):
+    with pytest.raises(OutOceanException):
+        Fleet.objects.add_battleship(board, 10, 10, vertical=False)
+    assert 0 == Fleet.objects.count()
