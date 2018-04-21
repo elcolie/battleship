@@ -116,3 +116,21 @@ def test_add_near_cruiser_battleship(board):
     msg = {'message': 'Too near!'}
     assert status.HTTP_400_BAD_REQUEST == res.status_code
     assert msg == res.data
+    assert 4 == Fleet.objects.filter(y_axis=5).count()
+
+
+def test_add_two_battleship(board):
+    add_battleship(board, 1, 1, vertical=False)
+    client = APIClient()
+    url = reverse('api:fleet-list')
+    data = {
+        'board': board.id,
+        'fleet_type': Fleet.FleetType.battleship,
+        'vertical': False,
+        'x_axis': 3,
+        'y_axis': 3,
+    }
+    res = client.post(url, data=data, type='json')
+    msg = f"trash VS sarit has battleship already"
+    assert status.HTTP_400_BAD_REQUEST == res.status_code
+    assert msg == str(res.data.get('board')[0])

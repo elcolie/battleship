@@ -49,9 +49,24 @@ class BattleShipSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         board = attrs.get('board')
-        if Fleet.objects.filter(board=board, fleet_type=Fleet.FleetType.battleship).count() > 4:
-            raise serializers.ValidationError(detail={'board': f"{board} has battleship already"})
-        return attrs
+        if Fleet.objects.filter(
+                board=board,
+                fleet_type=Fleet.FleetType.battleship).count() >= settings.BATTLESHIP_QTY * settings.BATTLESHIP_SIZE:
+            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.battleship} already"})
+        elif Fleet.objects.filter(
+                board=board,
+                fleet_type=Fleet.FleetType.battleship).count() >= settings.CRUISER_SIZE * settings.CRUISER_QTY:
+            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.cruiser} already"})
+        elif Fleet.objects.filter(
+                board=board,
+                fleet_type=Fleet.FleetType.battleship).count() >= settings.DESTROYER_SIZE * settings.DESTROYER_QTY:
+            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.destroyer} already"})
+        elif Fleet.objects.filter(
+                board=board,
+                fleet_type=Fleet.FleetType.battleship).count() >= settings.SUBMARINE_SIZE * settings.SUBMARINE_QTY:
+            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.submarine} already"})
+        else:
+            return attrs
 
     def create(self, validated_data):
         # Add battleship
