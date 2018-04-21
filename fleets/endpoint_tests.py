@@ -4,6 +4,7 @@ from rest_framework.test import APIClient
 from commons.tests import board
 
 from fleets.models import Fleet
+from fleets.utils import add_battleship
 
 
 def test_add_first_battleship_success(board):
@@ -81,5 +82,37 @@ def test_add_first_battleship_hit_edge_bottom_right_horizontal(board):
     }
     res = client.post(url, data=data, type='json')
     msg = {'message': 'Out of battle zone!'}
+    assert status.HTTP_400_BAD_REQUEST == res.status_code
+    assert msg == res.data
+
+
+def test_add_cruiser(board):
+    client = APIClient()
+    url = reverse('api:fleet-list')
+    data = {
+        'board': board.id,
+        'fleet_type': Fleet.FleetType.cruiser,
+        'vertical': False,
+        'x_axis': 1,
+        'y_axis': 1,
+    }
+    res = client.post(url, data=data, type='json')
+    assert status.HTTP_201_CREATED == res.status_code
+    assert 3 == Fleet.objects.filter(y_axis=1).count()
+
+
+def test_add_near_cruiser_battleship(board):
+    add_battleship(board, 5, 5, vertical=False)
+    client = APIClient()
+    url = reverse('api:fleet-list')
+    data = {
+        'board': board.id,
+        'fleet_type': Fleet.FleetType.cruiser,
+        'vertical': False,
+        'x_axis': 4,
+        'y_axis': 4,
+    }
+    res = client.post(url, data=data, type='json')
+    msg = {'message': 'Too near!'}
     assert status.HTTP_400_BAD_REQUEST == res.status_code
     assert msg == res.data

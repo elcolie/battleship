@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.compat import MinValueValidator, MaxValueValidator
 
 from fleets.models import Fleet
-from fleets.utils import add_battleship
+from fleets.utils import add_battleship, add_cruiser, add_destroyer, add_submarine
 
 
 class FleetSerializer(serializers.ModelSerializer):
@@ -49,18 +49,39 @@ class BattleShipSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         board = attrs.get('board')
-        if Fleet.objects.filter(board=board, fleet_type=Fleet.FleetType.battleship).count() > 1:
+        if Fleet.objects.filter(board=board, fleet_type=Fleet.FleetType.battleship).count() > 4:
             raise serializers.ValidationError(detail={'board': f"{board} has battleship already"})
         return attrs
 
     def create(self, validated_data):
         # Add battleship
-        if validated_data.get('fleet_type') == 'battleship':
+        if validated_data.get('fleet_type') == Fleet.FleetType.battleship:
             objs = add_battleship(
                 validated_data.get('board'),
                 validated_data.get('x_axis'),
                 validated_data.get('y_axis'),
                 validated_data.get('vertical')
             )
-            return objs[0]
-
+        elif validated_data.get('fleet_type') == Fleet.FleetType.cruiser:
+            objs = add_cruiser(
+                validated_data.get('board'),
+                validated_data.get('x_axis'),
+                validated_data.get('y_axis'),
+                validated_data.get('vertical')
+            )
+        elif validated_data.get('fleet_type') == Fleet.FleetType.destroyer:
+            objs = add_destroyer(
+                validated_data.get('board'),
+                validated_data.get('x_axis'),
+                validated_data.get('y_axis'),
+                validated_data.get('vertical')
+            )
+        else:  # validated_data.get('fleet_type') == Fleet.FleetType.submarine:
+            # With choices. I am sure it will be submarine
+            objs = add_submarine(
+                validated_data.get('board'),
+                validated_data.get('x_axis'),
+                validated_data.get('y_axis'),
+                validated_data.get('vertical')
+            )
+        return objs[0]
