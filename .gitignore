@@ -10,6 +10,7 @@ __pycache__/
 .idea
 static
 .pytest_cache
+htmlcov
 
 # Distribution / packaging
 .Python

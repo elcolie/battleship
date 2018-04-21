@@ -14,7 +14,9 @@ A famouse board game. This is backned API for a Battleship clone
 1. `python manage.py runserver`
 
 # Testing
-1. `pytest -n #processors -v`
+1. `coverage run --source fleets/ -m py.test .` # Prepare coverage
+1. `coverage report` # Brief report
+1. `coverage html`  # To see html coverage
 
 # Miscellaneous
 1. Place ship one by one over dedicated endpoint.

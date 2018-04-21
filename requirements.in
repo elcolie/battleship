@@ -19,4 +19,4 @@ coverage
 model_mommy
 pytest-django
 pytest-xdist
-
+coverage
