@@ -49,22 +49,26 @@ class BattleShipSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         board = attrs.get('board')
-        if Fleet.objects.filter(
-                board=board,
-                fleet_type=Fleet.FleetType.battleship).count() >= settings.BATTLESHIP_QTY * settings.BATTLESHIP_SIZE:
-            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.battleship} already"})
-        elif Fleet.objects.filter(
-                board=board,
-                fleet_type=Fleet.FleetType.battleship).count() >= settings.CRUISER_SIZE * settings.CRUISER_QTY:
-            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.cruiser} already"})
-        elif Fleet.objects.filter(
-                board=board,
-                fleet_type=Fleet.FleetType.battleship).count() >= settings.DESTROYER_SIZE * settings.DESTROYER_QTY:
-            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.destroyer} already"})
-        elif Fleet.objects.filter(
-                board=board,
-                fleet_type=Fleet.FleetType.battleship).count() >= settings.SUBMARINE_SIZE * settings.SUBMARINE_QTY:
-            raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.submarine} already"})
+        if attrs.get('fleet_type') == Fleet.FleetType.battleship:
+            if Fleet.objects.filter(
+                    board=board,
+                    fleet_type=Fleet.FleetType.battleship).count() >= settings.BATTLESHIP_QTY * settings.BATTLESHIP_SIZE:
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.battleship} already"})
+        if attrs.get('fleet_type') == Fleet.FleetType.cruiser:
+            if Fleet.objects.filter(
+                    board=board,
+                    fleet_type=Fleet.FleetType.battleship).count() >= settings.CRUISER_SIZE * settings.CRUISER_QTY:
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.cruiser} already"})
+        if attrs.get('fleet_type') == Fleet.FleetType.destroyer:
+            if Fleet.objects.filter(
+                    board=board,
+                    fleet_type=Fleet.FleetType.battleship).count() >= settings.DESTROYER_SIZE * settings.DESTROYER_QTY:
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.destroyer} already"})
+        if attrs.get('fleet_type') == Fleet.FleetType.submarine:
+            if Fleet.objects.filter(
+                    board=board,
+                    fleet_type=Fleet.FleetType.battleship).count() >= settings.SUBMARINE_SIZE * settings.SUBMARINE_QTY:
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.submarine} already"})
         else:
             return attrs
 
