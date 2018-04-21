@@ -1,5 +1,5 @@
 import pytest
-
+from django.conf import settings
 from fleets.models import Fleet
 from commons.tests import board
 from fleets.utils import add_battleship, OutOceanException, add_submarine, NearShipException
@@ -137,13 +137,44 @@ def test_battleship_horizontal_then_submarine_top_left(board):
     with pytest.raises(NearShipException):
         add_submarine(board, 4, 4, vertical=False)
 
+
 def test_battleship_horizontal_then_submarine_top_mid(board):
     add_battleship(board, 5, 5, vertical=False)
     with pytest.raises(NearShipException):
         add_submarine(board, 5, 4, vertical=False)
+
 
 def test_battleship_horizontal_then_submarine_top_right(board):
     add_battleship(board, 5, 5, vertical=False)
     with pytest.raises(NearShipException):
         add_submarine(board, 6, 4, vertical=False)
 
+
+def test_battleship_horizontal_then_submarine_left_mid(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 4, 5, vertical=False)
+
+
+def test_battleship_horizontal_then_submarine_left_down(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 4, 4, vertical=False)
+
+
+def test_battleship_horizontal_then_submarine_down_mid(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 5, 4, vertical=False)
+
+
+def test_battleship_horizontal_then_submarine_down_right(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 5, 6, vertical=False)
+
+
+def test_battleship_horizontal_then_submarine_right_mid(board):
+    add_battleship(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_submarine(board, 5 + settings.BATTLESHIP_SIZE, 5, vertical=False)
