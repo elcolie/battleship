@@ -9,7 +9,7 @@ __pycache__/
 .xml
 .idea
 static
-.pytest-cache
+.pytest_cache
 
 # Distribution / packaging
 .Python
