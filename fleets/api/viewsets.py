@@ -9,9 +9,3 @@ class FleetViewSet(viewsets.ModelViewSet):
     permission_classes = ()  # No permission for now
     queryset = Fleet.objects.all()
     serializer_class = FleetSerializer
-
-
-class BattleViewSet(viewsets.ModelViewSet):
-    """Place battleship"""
-    permission_classes = ()
-    queryset = Fleet

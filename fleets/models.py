@@ -6,17 +6,25 @@ from boards.models import Board
 from commons.utils import AbstractTimestamp
 
 
+class OutOceanException(Exception):
+    pass
+
 class FleetManager(models.Manager):
     def add_ship(self, board, x_axis, y_axis, vertical: None = True):
         tmp = []
         if vertical:
-            for j in range(y_axis, settings.BATTLESHIP_SIZE + 1):
-                tmp.append(Fleet(board=board, x_axis=x_axis, y_axis=j, occupied=True))
+            for idx_j in range(y_axis, y_axis + settings.BATTLESHIP_SIZE + 1):
+                if idx_j > settings.OCEAN_SIZE:
+                    raise OutOceanException(f"Out of battle zone!")
+                tmp.append(Fleet(board=board, x_axis=x_axis, y_axis=idx_j, occupied=True))
             Fleet.objects.bulk_create(tmp)
         else:
-            for i in range(x_axis, settings.BATTLESHIP_SIZE + 1):
-                tmp.append(Fleet(board=board, x_axis=x_axis, y_axis=y_axis, occupied=True))
+            for idx_i in range(x_axis, x_axis + settings.BATTLESHIP_SIZE + 1):
+                if idx_i > settings.OCEAN_SIZE:
+                    raise OutOceanException(f"Out of battle zone!")
+                tmp.append(Fleet(board=board, x_axis=idx_i, y_axis=y_axis, occupied=True))
             Fleet.objects.bulk_create(tmp)
+
 
 
 class Fleet(AbstractTimestamp):
