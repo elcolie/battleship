@@ -29,6 +29,15 @@ class FleetManager(models.Manager):
     def add_battleship(self, board, x_axis, y_axis, vertical: None = True):
         self.add_ship(board, x_axis, y_axis, settings.BATTLESHIP_SIZE, vertical=vertical)
 
+    def add_cruiser(self, board, x_axis, y_axis, vertical: None = True):
+        self.add_ship(board, x_axis, y_axis, settings.CRUISER_SIZE, vertical=vertical)
+
+    def add_destroyer(self, board, x_axis, y_axis, vertical: None = True):
+        self.add_ship(board, x_axis, y_axis, settings.DESTROYER_SIZE, vertical=vertical)
+
+    def add_submarine(self, board, x_axis, y_axis, vertical: None = True):
+        self.add_ship(board, x_axis, y_axis, settings.SUBMARINE_SIZE, vertical=vertical)
+
 
 class Fleet(AbstractTimestamp):
     class FleetType(DjangoChoices):
@@ -47,7 +56,7 @@ class Fleet(AbstractTimestamp):
 
     class Meta:
         unique_together = (
-            ('board', 'x_axis', 'y_axis'),
+            ('board', 'x_axis', 'y_axis', 'occupied'),
         )
         index_together = [
             ['board', 'x_axis', 'y_axis'],
