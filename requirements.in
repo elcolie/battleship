@@ -1,0 +1,15 @@
+Django
+django-environ
+django-cors-headers
+django-rest-swagger
+djangorestframework
+djangorestframework-jwt
+django-cors-headers
+docker-compose
+ipython
+ipdb
+requests
+psycopg2-binary
+gunicorn
+gevent
+coverage
