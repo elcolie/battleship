@@ -94,10 +94,12 @@ def add_battleship(board, x_axis, y_axis, vertical: bool = True):
 
 def add_cruiser(board, x_axis, y_axis, vertical: bool = True):
     add_ship(board, x_axis, y_axis, settings.CRUISER_SIZE, vertical=vertical)
+    generic_surrounding(board, x_axis, y_axis, settings.CRUISER_SIZE, vertical=vertical)
 
 
 def add_destroyer(board, x_axis, y_axis, vertical: bool = True):
     add_ship(board, x_axis, y_axis, settings.DESTROYER_SIZE, vertical=vertical)
+    generic_surrounding(board, x_axis, y_axis, settings.DESTROYER_SIZE, vertical=vertical)
 
 
 def add_submarine(board, x_axis, y_axis, vertical: bool = True):
