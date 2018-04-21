@@ -5,6 +5,7 @@ django-rest-swagger
 djangorestframework
 djangorestframework-jwt
 django-cors-headers
+django-extensions
 docker-compose
 ipython
 ipdb
