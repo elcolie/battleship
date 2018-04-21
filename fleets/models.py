@@ -19,6 +19,7 @@ class Fleet(AbstractTimestamp):
     x_axis = models.PositiveSmallIntegerField(default=1)
     y_axis = models.PositiveSmallIntegerField(default=1)
     ship_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=False)
+    hit = models.BooleanField(default=False)
     occupied = models.BooleanField(default=False)  # True is ship, False is vicinity. Will be deleted later
 
     class Meta:
@@ -30,4 +31,4 @@ class Fleet(AbstractTimestamp):
         ]
 
     def __str__(self):
-        return f"{self.x_axis} {self.y_axis}"
+        return f"<{self.x_axis} {self.y_axis} {self.hit}>"
