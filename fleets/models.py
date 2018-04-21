@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from djchoices import DjangoChoices, ChoiceItem
 
@@ -16,7 +18,8 @@ class Fleet(AbstractTimestamp):
     fleet_type = models.CharField(max_length=20, default=FleetType.battleship, choices=FleetType.choices)
     x_axis = models.PositiveSmallIntegerField(default=1)
     y_axis = models.PositiveSmallIntegerField(default=1)
-    occupied = models.BooleanField(default=False)  # True is ship, False is vicinity
+    ship_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=False)
+    occupied = models.BooleanField(default=False)  # True is ship, False is vicinity. Will be deleted later
 
     class Meta:
         unique_together = (

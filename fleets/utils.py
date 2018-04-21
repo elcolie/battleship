@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.db.models import Q
 
@@ -14,16 +16,17 @@ class NearShipException(Exception):
 
 def add_ship(board, x_axis, y_axis, ship_type, vertical: bool = True):
     tmp = []
+    my_uuid = uuid.uuid4()
     if vertical:
         for idx_j in range(y_axis, y_axis + ship_type):
             if idx_j > settings.OCEAN_SIZE:
                 raise OutOceanException(f"Out of battle zone!")
-            tmp.append(Fleet(board=board, x_axis=x_axis, y_axis=idx_j, occupied=True))
+            tmp.append(Fleet(board=board, x_axis=x_axis, y_axis=idx_j, ship_number=my_uuid, occupied=True))
     else:
         for idx_i in range(x_axis, x_axis + ship_type):
             if idx_i > settings.OCEAN_SIZE:
                 raise OutOceanException(f"Out of battle zone!")
-            tmp.append(Fleet(board=board, x_axis=idx_i, y_axis=y_axis, occupied=True))
+            tmp.append(Fleet(board=board, x_axis=idx_i, y_axis=y_axis, ship_number=my_uuid, occupied=True))
     return Fleet.objects.bulk_create(tmp)
 
 
