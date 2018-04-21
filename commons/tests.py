@@ -8,5 +8,5 @@ from boards.models import Board
 @pytest.fixture
 def board(db):
     mbx = mommy.make(User, username='sarit')
-    lullalab = mommy.make(User, username='scum')
+    lullalab = mommy.make(User, username='tiras')
     return mommy.make(Board, defender=lullalab, attacker=mbx, is_done=False)

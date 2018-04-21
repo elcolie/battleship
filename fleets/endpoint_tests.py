@@ -131,6 +131,6 @@ def test_add_two_battleship(board):
         'y_axis': 3,
     }
     res = client.post(url, data=data, type='json')
-    msg = f"scum VS sarit has battleship already"
+    msg = f"tiras VS sarit has battleship already"
     assert status.HTTP_400_BAD_REQUEST == res.status_code
     assert msg == str(res.data.get('board')[0])
