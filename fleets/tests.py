@@ -2,7 +2,7 @@ import pytest
 
 from fleets.models import Fleet
 from commons.tests import board
-from fleets.utils import add_battleship, OutOceanException, add_submarine, submarine_surrounding, NearShipException
+from fleets.utils import add_battleship, OutOceanException, add_submarine, NearShipException
 
 
 def test_place_battleship_left_top_corner_vertical(board):
@@ -117,3 +117,16 @@ def test_submarine_surrounding_down_right(board):
     add_submarine(board, 5, 5, vertical=False)
     with pytest.raises(NearShipException):
         add_submarine(board, 6, 6, vertical=False)
+
+
+def test_submarine_overlap_battle_ship(board):
+    """
+    X : submarine
+    Y : battleship
+    Alignment: XYYYY
+    :param board:
+    :return:
+    """
+    add_submarine(board, 5, 5, vertical=False)
+    with pytest.raises(NearShipException):
+        add_battleship(board, 5, 6, vertical=False)
