@@ -107,6 +107,27 @@ def test_add_near_cruiser_battleship(board):
     assert 4 == Fleet.objects.filter(y_axis=5).count()
 
 
+def test_add_curiser_near_battleship_tail(board, battleship):
+    client = APIClient()
+    url = reverse('api:fleet-list')
+    res1 = client.post(url, data=battleship, format='json')
+    assert status.HTTP_201_CREATED == res1.status_code
+
+    # (1,1), (1,2), (1,3), (1,4)
+    #                           (5, 2) (6,2) (7,2)
+    cruiser = {
+        'board': board.id,
+        'fleet_type': Fleet.FleetType.cruiser,
+        'vertical': False,
+        'x_axis': 5,
+        'y_axis': 2,
+    }
+    res = client.post(url, data=cruiser, format='json')
+    msg = {'message': 'Too near!'}
+    assert status.HTTP_400_BAD_REQUEST == res.status_code
+    assert msg == res.data
+
+
 def test_add_two_battleship_api(board, battleship):
     client = APIClient()
     url = reverse('api:fleet-list')
