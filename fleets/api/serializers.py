@@ -1,7 +1,11 @@
+import typing
+
 from django.conf import settings
+from djchoices import ChoiceItem
 from rest_framework import serializers
 from rest_framework.compat import MinValueValidator, MaxValueValidator
 
+from boards.models import Board
 from fleets.models import Fleet
 from fleets.utils import add_battleship, add_cruiser, add_destroyer, add_submarine
 
@@ -47,37 +51,31 @@ class BattleShipSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id']
 
-    # Should be change from attrs to `fleet_type` and refactor it by list of configuration
+    @staticmethod
+    def validate_quota(board: Board, fleet_type: ChoiceItem, ship_qty: int, ship_size: int, attrs: typing.Dict):
+        """Acrobatic here because data is flowing backward"""
+        if Fleet.objects.filter(
+                board=board,
+                fleet_type=fleet_type).count() >= ship_qty * ship_size:
+            raise serializers.ValidationError(detail={'board': f"{board} has {fleet_type} over quota"})
+        else:
+            return attrs
+
+    # Can not use `validate_fleet_type()` method since I have to use `board`
     def validate(self, attrs):
         board = attrs.get('board')
         if attrs.get('fleet_type') == Fleet.FleetType.battleship:
-            if Fleet.objects.filter(
-                    board=board,
-                    fleet_type=Fleet.FleetType.battleship).count() >= settings.BATTLESHIP_QTY * settings.BATTLESHIP_SIZE:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.battleship} over quota"})
-            else:
-                return attrs
+            return self.validate_quota(board, Fleet.FleetType.battleship, settings.BATTLESHIP_QTY,
+                                       settings.BATTLESHIP_SIZE, attrs)
         if attrs.get('fleet_type') == Fleet.FleetType.cruiser:
-            if Fleet.objects.filter(
-                    board=board,
-                    fleet_type=Fleet.FleetType.cruiser).count() >= settings.CRUISER_SIZE * settings.CRUISER_QTY:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.cruiser} over quota"})
-            else:
-                return attrs
+            return self.validate_quota(board, Fleet.FleetType.cruiser, settings.CRUISER_QTY,
+                                       settings.CRUISER_SIZE, attrs)
         if attrs.get('fleet_type') == Fleet.FleetType.destroyer:
-            if Fleet.objects.filter(
-                    board=board,
-                    fleet_type=Fleet.FleetType.destroyer).count() >= settings.DESTROYER_SIZE * settings.DESTROYER_QTY:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.destroyer} over quota"})
-            else:
-                return attrs
+            return self.validate_quota(board, Fleet.FleetType.destroyer, settings.DESTROYER_QTY,
+                                       settings.DESTROYER_SIZE, attrs)
         if attrs.get('fleet_type') == Fleet.FleetType.submarine:
-            if Fleet.objects.filter(
-                    board=board,
-                    fleet_type=Fleet.FleetType.submarine).count() >= settings.SUBMARINE_SIZE * settings.SUBMARINE_QTY:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.submarine} over quota"})
-            else:
-                return attrs
+            return self.validate_quota(board, Fleet.FleetType.submarine, settings.SUBMARINE_QTY,
+                                       settings.SUBMARINE_SIZE, attrs)
         else:
             raise serializers.ValidationError(detail={'fleet_type': f"Unknown fleet_type"})
 
