@@ -1,14 +1,19 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from commons.utils import NonSecurePermission
 from fleets.api.serializers import FleetSerializer, BattleShipSerializer
 from fleets.models import Fleet
 from fleets.utils import OutOceanException, NearShipException
 
 
+class FleetPermission(NonSecurePermission):
+    pass
+
+
 class FleetViewSet(viewsets.ModelViewSet):
     """View the overall of Ocean"""
-    permission_classes = ()  # No permission for now
+    permission_classes = (FleetPermission,)
     queryset = Fleet.objects.all()
     serializer_class = FleetSerializer
 

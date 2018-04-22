@@ -1,14 +1,19 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from commons.utils import NonSecurePermission
 from fleets.models import Fleet
 from missiles.api.serializers import MissileSerializer
 from missiles.models import Missile
 from missiles.utils import is_dead
 
 
+class MissilePermission(NonSecurePermission):
+    pass
+
+
 class MissileViewSet(viewsets.ModelViewSet):
-    permission_classes = ()
+    permission_classes = (MissilePermission,)
     queryset = Missile.objects.all()
     serializer_class = MissileSerializer
 
