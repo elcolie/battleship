@@ -47,30 +47,39 @@ class BattleShipSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id']
 
+    # Should be change from attrs to `fleet_type` and refactor it by list of configuration
     def validate(self, attrs):
         board = attrs.get('board')
         if attrs.get('fleet_type') == Fleet.FleetType.battleship:
             if Fleet.objects.filter(
                     board=board,
                     fleet_type=Fleet.FleetType.battleship).count() >= settings.BATTLESHIP_QTY * settings.BATTLESHIP_SIZE:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.battleship} already"})
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.battleship} over quota"})
+            else:
+                return attrs
         if attrs.get('fleet_type') == Fleet.FleetType.cruiser:
             if Fleet.objects.filter(
                     board=board,
-                    fleet_type=Fleet.FleetType.battleship).count() >= settings.CRUISER_SIZE * settings.CRUISER_QTY:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.cruiser} already"})
+                    fleet_type=Fleet.FleetType.cruiser).count() >= settings.CRUISER_SIZE * settings.CRUISER_QTY:
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.cruiser} over quota"})
+            else:
+                return attrs
         if attrs.get('fleet_type') == Fleet.FleetType.destroyer:
             if Fleet.objects.filter(
                     board=board,
-                    fleet_type=Fleet.FleetType.battleship).count() >= settings.DESTROYER_SIZE * settings.DESTROYER_QTY:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.destroyer} already"})
+                    fleet_type=Fleet.FleetType.destroyer).count() >= settings.DESTROYER_SIZE * settings.DESTROYER_QTY:
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.destroyer} over quota"})
+            else:
+                return attrs
         if attrs.get('fleet_type') == Fleet.FleetType.submarine:
             if Fleet.objects.filter(
                     board=board,
-                    fleet_type=Fleet.FleetType.battleship).count() >= settings.SUBMARINE_SIZE * settings.SUBMARINE_QTY:
-                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.submarine} already"})
+                    fleet_type=Fleet.FleetType.submarine).count() >= settings.SUBMARINE_SIZE * settings.SUBMARINE_QTY:
+                raise serializers.ValidationError(detail={'board': f"{board} has {Fleet.FleetType.submarine} over quota"})
+            else:
+                return attrs
         else:
-            return attrs
+            raise serializers.ValidationError(detail={'fleet_type': f"Unknown fleet_type"})
 
     def create(self, validated_data):
         # Add battleship

@@ -14,19 +14,19 @@ class NearShipException(Exception):
     pass
 
 
-def add_ship(board, x_axis, y_axis, ship_type, vertical: bool = True):
+def add_ship(board, x_axis, y_axis, ship_size, ship_type, vertical: bool = True):
     tmp = []
     my_uuid = uuid.uuid4()
     if vertical:
-        for idx_j in range(y_axis, y_axis + ship_type):
+        for idx_j in range(y_axis, y_axis + ship_size):
             if idx_j > settings.OCEAN_SIZE:
                 raise OutOceanException(f"Out of battle zone!")
-            tmp.append(Fleet(board=board, x_axis=x_axis, y_axis=idx_j, ship_number=my_uuid, occupied=True))
+            tmp.append(Fleet(board=board, x_axis=x_axis, y_axis=idx_j, fleet_type=ship_type, ship_number=my_uuid, occupied=True))
     else:
-        for idx_i in range(x_axis, x_axis + ship_type):
+        for idx_i in range(x_axis, x_axis + ship_size):
             if idx_i > settings.OCEAN_SIZE:
                 raise OutOceanException(f"Out of battle zone!")
-            tmp.append(Fleet(board=board, x_axis=idx_i, y_axis=y_axis, ship_number=my_uuid, occupied=True))
+            tmp.append(Fleet(board=board, x_axis=idx_i, y_axis=y_axis, fleet_type=ship_type, ship_number=my_uuid, occupied=True))
     return Fleet.objects.bulk_create(tmp)
 
 
@@ -90,24 +90,24 @@ def generic_surrounding(board, x_axis, y_axis, ship_size, vertical: bool = True)
 
 
 def add_battleship(board, x_axis, y_axis, vertical: bool = True):
-    objs = add_ship(board, x_axis, y_axis, settings.BATTLESHIP_SIZE, vertical=vertical)
+    objs = add_ship(board, x_axis, y_axis, settings.BATTLESHIP_SIZE, Fleet.FleetType.battleship, vertical=vertical)
     generic_surrounding(board, x_axis, y_axis, settings.BATTLESHIP_SIZE, vertical=vertical)
     return objs
 
 
 def add_cruiser(board, x_axis, y_axis, vertical: bool = True):
-    objs = add_ship(board, x_axis, y_axis, settings.CRUISER_SIZE, vertical=vertical)
+    objs = add_ship(board, x_axis, y_axis, settings.CRUISER_SIZE, Fleet.FleetType.cruiser, vertical=vertical)
     generic_surrounding(board, x_axis, y_axis, settings.CRUISER_SIZE, vertical=vertical)
     return objs
 
 
 def add_destroyer(board, x_axis, y_axis, vertical: bool = True):
-    objs = add_ship(board, x_axis, y_axis, settings.DESTROYER_SIZE, vertical=vertical)
+    objs = add_ship(board, x_axis, y_axis, settings.DESTROYER_SIZE, Fleet.FleetType.destroyer, vertical=vertical)
     generic_surrounding(board, x_axis, y_axis, settings.DESTROYER_SIZE, vertical=vertical)
     return objs
 
 
 def add_submarine(board, x_axis, y_axis, vertical: bool = True):
-    objs = add_ship(board, x_axis, y_axis, settings.SUBMARINE_SIZE, vertical=vertical)
+    objs = add_ship(board, x_axis, y_axis, settings.SUBMARINE_SIZE, Fleet.FleetType.submarine, vertical=vertical)
     generic_surrounding(board, x_axis, y_axis, settings.SUBMARINE_SIZE, vertical=vertical)
     return objs

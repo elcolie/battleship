@@ -31,4 +31,4 @@ class Fleet(AbstractTimestamp):
         ]
 
     def __str__(self):
-        return f"<{self.x_axis} {self.y_axis} {self.hit}>"
+        return f"<{self.fleet_type} {self.x_axis} {self.y_axis} {self.hit}>"
