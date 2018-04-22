@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import IntegrityError
 
 from fleets.models import Fleet
-from commons.tests import board
+from commons.conftest import board
 from fleets.utils import add_battleship, OutOceanException, add_submarine, NearShipException
 
 

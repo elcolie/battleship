@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
-from commons.tests import board, battleship, cruiser1, cruiser2, destroyer1, destroyer2, destroyer3, submarine1, \
+from commons.conftest import board, battleship, cruiser1, cruiser2, destroyer1, destroyer2, destroyer3, submarine1, \
     submarine2, submarine3, submarine4
 
 from fleets.models import Fleet

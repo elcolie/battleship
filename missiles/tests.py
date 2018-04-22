@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from commons.tests import board
+from commons.conftest import board
 from fleets.models import Fleet
 from fleets.utils import add_battleship
 from missiles.models import Missile
