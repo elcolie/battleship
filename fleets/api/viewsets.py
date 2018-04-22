@@ -13,8 +13,6 @@ class FleetViewSet(viewsets.ModelViewSet):
     serializer_class = FleetSerializer
 
     def get_serializer_class(self):
-        # from pprint import pprint
-        # import ipdb; ipdb.set_trace()
         if self.request.method == 'GET':
             return self.serializer_class
         elif self.request.method == 'POST':
