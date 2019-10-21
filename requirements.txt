@@ -5,7 +5,6 @@
 #    pip-compile --output-file requirements.txt requirements.in
 #
 apipkg==1.4               # via execnet
-appnope==0.1.0            # via ipython
 attrs==17.4.0             # via pytest
 backcall==0.1.0           # via ipython
 cached-property==1.4.2    # via docker-compose
@@ -23,7 +22,7 @@ django-filter==1.1.0
 django-rest-swagger==2.1.2
 django==2.0.4
 djangorestframework-jwt==1.11.0
-djangorestframework==3.8.2
+djangorestframework==3.9.1
 docker-compose==1.21.0
 docker-pycreds==0.2.2     # via docker
 docker==3.2.1             # via docker-compose
